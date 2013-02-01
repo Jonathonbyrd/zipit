@@ -12,7 +12,7 @@ ini_set('max_execution_time', 900);
     require('zipit-config.php');
 
 // set working directory
-    chdir("../../..");
+    //chdir("../../..");
 
 // define url
     $url = $_SERVER['SERVER_NAME'];
