@@ -21,7 +21,7 @@ ini_set('max_execution_time', 900);
     require('zipit-config.php');
 
 // set working directory
-    chdir("../../..");
+   // chdir("../../..");
 
 // define url
     $url = $_SERVER['SERVER_NAME'];
@@ -75,15 +75,15 @@ if (filemtime($file) < time() - 86400) {
 }
 
 // create local backups folders if they are not there
-if (!is_dir('./web/content/zipit/zipit-backups')) {
-    mkdir('./web/content/zipit/zipit-backups');
+if (!is_dir('./zipit-backups')) {
+    mkdir('./zipit-backups');
 }
-if (!is_dir('./web/content/zipit/zipit-backups/databases')) {
-    mkdir('./web/content/zipit/zipit-backups/databases');
+if (!is_dir('./zipit-backups/databases')) {
+    mkdir('./zipit-backups/databases');
 }
 
 // require Cloud Files API
-   require('./web/content/zipit/api/cloudfiles.php');
+   require('./api/cloudfiles.php');
 
 // authenticate to Cloud Files
 try {
@@ -186,7 +186,7 @@ if ($dbSize > 4831838208) {
 }
 
 // set the command to run
-    $cmd = "mysqldump -h $db_host -u $db_user --password='$db_pass' $db_name > ./web/content/zipit/zipit-backups/databases/$db_name-$timestamp.sql; zip -9prj ./web/content/zipit/zipit-backups/databases/$db_name-$timestamp.zip ./web/content/zipit/zipit-backups/databases/$db_name-$timestamp.sql";
+    $cmd = "mysqldump -h $db_host -u $db_user --password='$db_pass' $db_name > ./zipit-backups/databases/$db_name-$timestamp.sql; zip -9prj ./web/content/zipit/zipit-backups/databases/$db_name-$timestamp.zip ./web/content/zipit/zipit-backups/databases/$db_name-$timestamp.sql";
 
     $pipe = popen($cmd, 'r');
 
@@ -209,7 +209,7 @@ if ($dbSize > 4831838208) {
     pclose($pipe);
 
 // get file to transfer to Cloud Files
-    $res  = fopen("./web/content/zipit/zipit-backups/databases/$db_name-$timestamp.zip", "rb");
+    $res  = fopen("./zipit-backups/databases/$db_name-$timestamp.zip", "rb");
     $temp = tmpfile();
     $size = 0.0;
     while (!feof($res))
@@ -244,14 +244,14 @@ if ($dbSize > 4831838208) {
     fclose($temp); 
 
 // generate md5 hash
-    $md5file = "./web/content/zipit/zipit-backups/databases/$db_name-$timestamp.zip";
+    $md5file = "./zipit-backups/databases/$db_name-$timestamp.zip";
     $md5 = md5_file($md5file);
 
 // compare md5 with etag
 if ($md5 == $etag) {
 
 // clean up local backups
-    shell_exec('rm -rf ./web/content/zipit/zipit-backups/databases/*');
+    shell_exec('rm -rf ./zipit-backups/databases/*');
     
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -267,7 +267,7 @@ else {
     $container->delete_object("$db_name-$timestamp.zip");
    
 // remove local file
-    shell_exec("rm -rf ./web/content/zipit/zipit-backups/databases/*");
+    shell_exec("rm -rf ./zipit-backups/databases/*");
 
 // MD5 mismatch
 
