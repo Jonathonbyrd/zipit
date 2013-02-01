@@ -13,7 +13,7 @@
     require('zipit-config.php');
 
 // define zipit log file
-    $zipitlog = "../../../logs/zipit.log";
+    $zipitlog = "./logs/zipit.log";
     $logsize = filesize($zipitlog);
 
 // create zipit log file if it doesn't exist
@@ -25,7 +25,7 @@ if(!file_exists("$zipitlog"))
 }
 
 if ($logsize > 52428800) {
-shell_exec("mv ../../../logs/zipit.log ../../../logs/zipit_old.log");
+shell_exec("mv ./logs/zipit.log ./logs/zipit_old.log");
 }
 
 // define url
