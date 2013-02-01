@@ -6,7 +6,7 @@
 # Visit http://zipitbackup.com for updates
 ###############################################################
 
-ini_set('max_execution_time', 900);
+ini_set('max_execution_time', 9000);
 
 // set default timezone
     date_default_timezone_set('America/Chicago');
@@ -16,14 +16,14 @@ ini_set('max_execution_time', 900);
 
 // require zipit configuration
     require('zipit-config.php');
-
+    
 // set working directory
-    //chdir("../../..");
-
+    //chdir("../..");
+    
 // define zipit log file
     $zipitlog = "./logs/zipit.log";
     $logsize = filesize($zipitlog);
- 
+    
 // create local backups folders if they are not there
 if (!is_dir('./logs')) {
     mkdir('./logs');
@@ -73,11 +73,11 @@ if (!is_dir('./zipit-backups/files')) {
 <?php
 
 // define zipit log file
-    $zipitlog = "logs/zipit.log";
+    $zipitlog = "./logs/zipit.log";
     $logsize = filesize($zipitlog);
 
 if ($logsize > 52428800) {
-shell_exec("mv logs/zipit.log logs/zipit_old.log");
+shell_exec("mv ./logs/zipit.log ./logs/zipit_old.log");
 }
 
 // require Cloud Files API
@@ -272,10 +272,10 @@ if ($site_size > 4608) {
     $stringData = "$logtimestamp -- Zipit creation for $url-$timestamp.zip\n";
     fwrite($fh, $stringData);
     fclose($fh);
-
-// set the command to run
-    $cmd = "zip -9pr ./zipit-backups/files/$url-$timestamp.zip lib web logs";
-
+    
+    // set the command to run
+    $cmd = "zip -9pr ./zipit-backups/files/$url-$timestamp.zip ../* -x ./zipit *.zip ../downloads";
+    
     $pipe = popen($cmd, 'r');
 
     if (empty($pipe)) {
@@ -285,13 +285,13 @@ if ($site_size > 4608) {
     stream_set_blocking($pipe, false);
 
     while (!feof($pipe)) {
-    fread($pipe, 1024);
+        fread($pipe, 1024);
 
-for ($i = 0; $i < ($size = 100); $i++) {
-// keeps browser from timing out after 30 seconds
-   $p->setProgressBarProgress($i*100/$size);
-   usleep(100000*0.1);
-}
+        for ($i = 0; $i < ($size = 100); $i++) {
+        // keeps browser from timing out after 30 seconds
+           $p->setProgressBarProgress($i*100/$size);
+           usleep(100000*0.1);
+        }
     }
 
 // get file to transfer to Cloud Files
@@ -320,10 +320,13 @@ for ($i = 0; $i < ($size = 100); $i++) {
    fclose($fh);
 
 // set zipit object
+try {
     $object = $container->create_object("$url-$timestamp.zip");
     $object->content_type = "application/zip";
     $object->write($temp, $size);
-
+} catch (Exception $e) {
+    
+}
 // end progress bar
    $p->setProgressBarProgress(100);
     pclose($pipe);
