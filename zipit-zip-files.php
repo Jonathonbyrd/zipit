@@ -45,11 +45,11 @@ if (filemtime($file) < time() - 86400) {
 }
 
 // create local backups folders if they are not there
-if (!is_dir('./web/content/zipit/zipit-backups')) {
-    mkdir('./web/content/zipit/zipit-backups');
+if (!is_dir('./zipit-backups')) {
+    mkdir('./zipit-backups');
 }
-if (!is_dir('./web/content/zipit/zipit-backups/files')) {
-    mkdir('./web/content/zipit/zipit-backups/files');
+if (!is_dir('./zipit-backups/files')) {
+    mkdir('./zipit-backups/files');
 }
 ?>
 
@@ -77,7 +77,7 @@ shell_exec("mv logs/zipit.log logs/zipit_old.log");
 }
 
 // require Cloud Files API
-   require('./web/content/zipit/api/cloudfiles.php');
+   require('./api/cloudfiles.php');
 
 // authenticate to Cloud Files
 try {
@@ -270,7 +270,7 @@ if ($site_size > 4608) {
     fclose($fh);
 
 // set the command to run
-    $cmd = "zip -9pr ./web/content/zipit/zipit-backups/files/$url-$timestamp.zip lib web logs";
+    $cmd = "zip -9pr ./zipit-backups/files/$url-$timestamp.zip lib web logs";
 
     $pipe = popen($cmd, 'r');
 
@@ -291,7 +291,7 @@ for ($i = 0; $i < ($size = 100); $i++) {
     }
 
 // get file to transfer to Cloud Files
-    $res  = fopen("./web/content/zipit/zipit-backups/files/$url-$timestamp.zip", "rb");
+    $res  = fopen("./zipit-backups/files/$url-$timestamp.zip", "rb");
     $temp = tmpfile();
     $size = 0.0;
     while (!feof($res))
@@ -329,14 +329,14 @@ for ($i = 0; $i < ($size = 100); $i++) {
     fclose($temp);
 
 // generate md5 hash
-    $md5file = "./web/content/zipit/zipit-backups/files/$url-$timestamp.zip";
+    $md5file = "./zipit-backups/files/$url-$timestamp.zip";
     $md5 = md5_file($md5file);
 
 // compare md5 with etag
     if ($md5 == $etag) {
 
 // clean up local backups
-   shell_exec('rm -rf ./web/content/zipit/zipit-backups/files/*');
+   shell_exec('rm -rf ./zipit-backups/files/*');
    
 // write to log
    $logtimestamp =  date("M-d-Y_H-i-s");
@@ -352,7 +352,7 @@ else {
    $container->delete_object("$url-$timestamp.zip");
 
 // remove local file
-   shell_exec("rm -rf ./web/content/zipit/zipit-backups/files/*");
+   shell_exec("rm -rf ./zipit-backups/files/*");
 
 // alert MD5 mismatch
    echo '<script type="text/javascript">';
