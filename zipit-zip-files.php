@@ -18,7 +18,7 @@ ini_set('max_execution_time', 900);
     require('zipit-config.php');
 
 // set working directory
-    chdir("../../..");
+    //chdir("../../..");
 
 // define zipit log file
     $zipitlog = "logs/zipit.log";
