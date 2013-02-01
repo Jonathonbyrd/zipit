@@ -21,9 +21,13 @@ ini_set('max_execution_time', 900);
     //chdir("../../..");
 
 // define zipit log file
-    $zipitlog = "logs/zipit.log";
+    $zipitlog = "./logs/zipit.log";
     $logsize = filesize($zipitlog);
-
+ 
+// create local backups folders if they are not there
+if (!is_dir('./logs')) {
+    mkdir('./logs');
+}
 // create zipit log file if it doesn't exist
 if(!file_exists("$zipitlog")) 
 { 
