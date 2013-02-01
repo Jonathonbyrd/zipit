@@ -18,11 +18,11 @@ $file = $_GET["file"];
     $url = $_SERVER['SERVER_NAME'];
 
 // define zipit log file
-    $zipitlog = "../../../logs/zipit.log";
+    $zipitlog = "./logs/zipit.log";
     $logsize = filesize($zipitlog);
 
 if ($logsize > 52428800) {
-shell_exec("mv ../../../logs/zipit.log ../../../logs/zipit_old.log");
+shell_exec("mv ./logs/zipit.log ./logs/zipit_old.log");
 }
 
 header("Content-disposition: attachment; filename=$file");
