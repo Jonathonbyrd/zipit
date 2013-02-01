@@ -16,7 +16,7 @@
     $url = $_SERVER['SERVER_NAME'];
 
 // define zipit log file
-    $zipitlog = "../../../logs/zipit.log";
+    $zipitlog = "./logs/zipit.log";
     $logsize = filesize($zipitlog);
 
 
